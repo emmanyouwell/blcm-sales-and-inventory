@@ -26,7 +26,14 @@ router.post('/', authorize('admin'), [
   body('firstName').trim().notEmpty().withMessage('First name is required'),
   body('lastName').trim().notEmpty().withMessage('Last name is required'),
   body('email').trim().isEmail().withMessage('Please provide a valid email address'),
-  body('phone').trim().notEmpty().withMessage('Phone number is required'),
+  body('phone')
+    .trim()
+    .notEmpty()
+    .withMessage('Phone number is required')
+    .matches(/^\d+$/)
+    .withMessage('Phone number must contain only digits')
+    .isLength({ max: 11 })
+    .withMessage('Phone number must not exceed 11 digits'),
   body('password')
     .isLength({ min: 8 }).withMessage('Password must be at least 8 characters')
     .matches(/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]/)
@@ -44,7 +51,15 @@ router.put('/:id', authorize('admin'), [
   body('firstName').optional().trim().notEmpty().withMessage('First name cannot be empty'),
   body('lastName').optional().trim().notEmpty().withMessage('Last name cannot be empty'),
   body('email').optional().trim().isEmail().withMessage('Please provide a valid email address'),
-  body('phone').optional().trim().notEmpty().withMessage('Phone number cannot be empty'),
+  body('phone')
+    .optional()
+    .trim()
+    .notEmpty()
+    .withMessage('Phone number cannot be empty')
+    .matches(/^\d+$/)
+    .withMessage('Phone number must contain only digits')
+    .isLength({ max: 11 })
+    .withMessage('Phone number must not exceed 11 digits'),
   body('role').optional().isIn(['admin', 'staff', 'supplier']).withMessage('Invalid role'),
   body('isActive').optional().isBoolean().withMessage('isActive must be boolean'),
   handleValidationErrors

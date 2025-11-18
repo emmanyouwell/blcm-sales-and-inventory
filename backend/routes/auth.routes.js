@@ -48,7 +48,15 @@ router.put('/profile', [
   body('firstName').optional().trim().notEmpty().withMessage('First name cannot be empty'),
   body('lastName').optional().trim().notEmpty().withMessage('Last name cannot be empty'),
   body('email').optional().trim().isEmail().withMessage('Please provide a valid email address'),
-  body('phone').optional().trim().notEmpty().withMessage('Phone cannot be empty'),
+  body('phone')
+    .optional()
+    .trim()
+    .notEmpty()
+    .withMessage('Phone cannot be empty')
+    .matches(/^\d+$/)
+    .withMessage('Phone number must contain only digits')
+    .isLength({ max: 11 })
+    .withMessage('Phone number must not exceed 11 digits'),
   body('username').optional().trim().isLength({ min: 3 }).withMessage('Username must be at least 3 characters'),
   handleValidationErrors
 ], authController.updateProfile);

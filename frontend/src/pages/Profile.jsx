@@ -38,10 +38,21 @@ const Profile = () => {
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
-    setFormData(prev => ({
-      ...prev,
-      [name]: value
-    }));
+    
+    // Validate phone number: only digits, max 11 digits
+    if (name === 'phone') {
+      const digitsOnly = value.replace(/\D/g, '');
+      const limitedValue = digitsOnly.slice(0, 11);
+      setFormData(prev => ({
+        ...prev,
+        [name]: limitedValue
+      }));
+    } else {
+      setFormData(prev => ({
+        ...prev,
+        [name]: value
+      }));
+    }
   };
 
   const handlePasswordChange = (e) => {
@@ -243,12 +254,13 @@ const Profile = () => {
             </label>
             {isEditing ? (
               <input
-                type="text"
+                type="tel"
                 name="phone"
                 value={formData.phone}
                 onChange={handleInputChange}
                 className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-                placeholder="Enter phone number"
+                placeholder="Enter phone number (max 11 digits)"
+                maxLength={11}
               />
             ) : (
               <p className="text-gray-900 font-medium">{user.phone}</p>

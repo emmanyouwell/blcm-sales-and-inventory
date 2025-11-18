@@ -534,11 +534,29 @@ const Sales = () => {
                   <label className="block text-sm font-medium mb-1">Customer Phone *</label>
                   <input
                     {...register('customerPhone', {
-                      required: 'Customer phone is required'
+                      required: 'Customer phone is required',
+                      pattern: {
+                        value: /^\d+$/,
+                        message: 'Phone number must contain only digits'
+                      },
+                      maxLength: {
+                        value: 11,
+                        message: 'Phone number must not exceed 11 digits'
+                      },
+                      validate: (value) => {
+                        if (value && value.length > 11) {
+                          return 'Phone number must not exceed 11 digits';
+                        }
+                        return true;
+                      }
                     })}
                     type="tel"
                     className="w-full px-3 py-2 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-                    placeholder="Enter customer phone"
+                    placeholder="Enter customer phone (max 11 digits)"
+                    onInput={(e) => {
+                      // Only allow digits and limit to 11
+                      e.target.value = e.target.value.replace(/\D/g, '').slice(0, 11);
+                    }}
                   />
                   {errors.customerPhone && (
                     <p className="text-red-500 text-xs mt-1">{errors.customerPhone.message}</p>

@@ -24,6 +24,13 @@ router.get('/', salesController.getSales);
 router.post('/', authorize('supplier', 'staff', 'admin'), [
   body('customerName').optional().trim(),
   body('customerEmail').optional().isEmail().withMessage('Please provide a valid email'),
+  body('customerPhone')
+    .optional()
+    .trim()
+    .matches(/^\d+$/)
+    .withMessage('Phone number must contain only digits')
+    .isLength({ max: 11 })
+    .withMessage('Phone number must not exceed 11 digits'),
   body('items').isArray({ min: 1 }).withMessage('At least one item is required'),
   body('items.*.product').isMongoId().withMessage('Valid product ID is required'),
   body('items.*.quantity').isInt({ min: 1 }).withMessage('Quantity must be at least 1'),

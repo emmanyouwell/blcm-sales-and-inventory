@@ -306,9 +306,28 @@ const Users = () => {
                 <label className="block text-sm font-medium mb-1">Phone *</label>
                 <input
                   {...register('phone', {
-                    required: 'Phone number is required'
+                    required: 'Phone number is required',
+                    pattern: {
+                      value: /^\d+$/,
+                      message: 'Phone number must contain only digits'
+                    },
+                    maxLength: {
+                      value: 11,
+                      message: 'Phone number must not exceed 11 digits'
+                    },
+                    validate: (value) => {
+                      if (value && value.length > 11) {
+                        return 'Phone number must not exceed 11 digits';
+                      }
+                      return true;
+                    }
                   })}
+                  type="tel"
                   className="w-full px-3 py-2 border rounded-lg"
+                  onInput={(e) => {
+                    // Only allow digits and limit to 11
+                    e.target.value = e.target.value.replace(/\D/g, '').slice(0, 11);
+                  }}
                 />
                 {errors.phone && (
                   <p className="text-red-600 text-sm">{errors.phone.message}</p>
@@ -442,8 +461,29 @@ const Users = () => {
               <div>
                 <label className="block text-sm font-medium mb-1">Phone *</label>
                 <input
-                  {...registerSupplier('phone', { required: 'Phone number is required' })}
+                  {...registerSupplier('phone', {
+                    required: 'Phone number is required',
+                    pattern: {
+                      value: /^\d+$/,
+                      message: 'Phone number must contain only digits'
+                    },
+                    maxLength: {
+                      value: 11,
+                      message: 'Phone number must not exceed 11 digits'
+                    },
+                    validate: (value) => {
+                      if (value && value.length > 11) {
+                        return 'Phone number must not exceed 11 digits';
+                      }
+                      return true;
+                    }
+                  })}
+                  type="tel"
                   className="w-full px-3 py-2 border rounded-lg"
+                  onInput={(e) => {
+                    // Only allow digits and limit to 11
+                    e.target.value = e.target.value.replace(/\D/g, '').slice(0, 11);
+                  }}
                 />
                 {errorsSupplier.phone && (
                   <p className="text-red-600 text-sm">{errorsSupplier.phone.message}</p>

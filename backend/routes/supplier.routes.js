@@ -37,7 +37,14 @@ router.post('/', authorize('admin'), [
   body('firstName').trim().notEmpty().withMessage('First name is required'),
   body('lastName').trim().notEmpty().withMessage('Last name is required'),
   body('email').trim().isEmail().withMessage('Please provide a valid email address'),
-  body('phone').trim().notEmpty().withMessage('Phone number is required'),
+  body('phone')
+    .trim()
+    .notEmpty()
+    .withMessage('Phone number is required')
+    .matches(/^\d+$/)
+    .withMessage('Phone number must contain only digits')
+    .isLength({ max: 11 })
+    .withMessage('Phone number must not exceed 11 digits'),
   body('companyName').trim().notEmpty().withMessage('Company name is required'),
   body('contactDetails').trim().notEmpty().withMessage('Contact details are required'),
   handleValidationErrors
